@@ -88,12 +88,6 @@ public:
    */
   void setCollisionVisible(bool visible);
 
-  /**
-   * \brief Set whether the attached body of the robot should be visible
-   * @param visible Whether the attached body should be visible
-   */
-  void setAttachedBodyVisible(bool visible);
-
   void setAlpha(float alpha);
 
 private:
@@ -109,7 +103,6 @@ private:
   bool visible_;
   bool visual_visible_;
   bool collision_visible_;
-  bool attached_body_visible_;
 };
 }
 

@@ -124,7 +124,6 @@ private Q_SLOTS:
   void changedSceneEnabled();
   void changedSceneRobotVisualEnabled();
   void changedSceneRobotCollisionEnabled();
-  void changedSceneRobotAttachedBodyEnabled();
   void changedRobotSceneAlpha();
   void changedSceneAlpha();
   void changedSceneColor();
@@ -201,7 +200,6 @@ protected:
   rviz::BoolProperty* scene_enabled_property_;
   rviz::BoolProperty* scene_robot_visual_enabled_property_;
   rviz::BoolProperty* scene_robot_collision_enabled_property_;
-  rviz::BoolProperty* scene_robot_attached_body_enabled_property_;
   rviz::RosTopicProperty* planning_scene_topic_property_;
   rviz::FloatProperty* robot_alpha_property_;
   rviz::FloatProperty* scene_alpha_property_;
