@@ -11,6 +11,8 @@ find_package(catkin REQUIRED
       roscpp
       rosparam_shortcuts
       trajopt
+      trajopt_sco
+      trajopt_utils
 )
 moveit_build_options()
 
