@@ -13,7 +13,6 @@ find_package(catkin REQUIRED
       trajopt
       trajopt_sco
       trajopt_utils
-      rosparam_shortcuts
 )
 moveit_build_options()
 
@@ -28,7 +27,6 @@ catkin_package(
       moveit_core
       moveit_visual_tools
       moveit_ros_planning_interface
-      rosparam_shortcuts
 )
 
 # The following include_directory should have include folder of the new planner.
