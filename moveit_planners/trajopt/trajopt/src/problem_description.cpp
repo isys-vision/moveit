@@ -556,7 +556,7 @@ void CollisionTermInfo::addObjectiveTerms(TrajOptProblem& prob)
     if (continuous)
     {
       for (int i = first_step; i <= last_step - gap; ++i)
-      {
+      { // ??????????
         prob.addCost(sco::CostPtr(new CollisionCost(prob.GetKin(),
                                                     prob.GetEnv(),
                                                     info[static_cast<size_t>(i - first_step)],
@@ -600,6 +600,8 @@ void CollisionTermInfo::addObjectiveTerms(TrajOptProblem& prob)
     }
   }
 }
+
+// ----------------
 
 
 void generateInitialTrajectory(const ProblemInfo& pci, const std::vector<double>& current_joint_values,
