@@ -556,9 +556,9 @@ void CollisionTermInfo::addObjectiveTerms(TrajOptProblem& prob)
     if (continuous)
     {
       for (int i = first_step; i <= last_step - gap; ++i)
-      { // ??????????
-        prob.addCost(sco::CostPtr(new CollisionCost(prob.GetKin(),
-                                                    prob.GetEnv(),
+      { 
+        prob.addCost(sco::CostPtr(new CollisionCost(prob.GetPlanningScene(),
+                                                    prob.GetPlanningGroup(),
                                                     info[static_cast<size_t>(i - first_step)],
                                                     prob.GetVarRow(i, 0, n_dof),
                                                     prob.GetVarRow(i + gap, 0, n_dof))));
@@ -570,7 +570,8 @@ void CollisionTermInfo::addObjectiveTerms(TrajOptProblem& prob)
       for (int i = first_step; i <= last_step; ++i)
       {
         prob.addCost(sco::CostPtr(new CollisionCost(
-            prob.GetKin(), prob.GetEnv(), info[static_cast<size_t>(i - first_step)], prob.GetVarRow(i, 0, n_dof))));
+            prob.GetPlanningScene(), prob.GetPlanningGroup(), 
+            info[static_cast<size_t>(i - first_step)], prob.GetVarRow(i, 0, n_dof))));
         prob.getCosts().back()->setName((boost::format("%s_%i") % name.c_str() % i).str());
       }
     }
@@ -581,8 +582,9 @@ void CollisionTermInfo::addObjectiveTerms(TrajOptProblem& prob)
     {
       for (int i = first_step; i < last_step; ++i)
       {
-        prob.addIneqConstraint(sco::ConstraintPtr(new CollisionConstraint(prob.GetKin(),
-                                                                          prob.GetEnv(),
+        prob.addIneqConstraint(sco::ConstraintPtr(new CollisionConstraint(
+                                                                          prob.GetPlanningScene(),
+                                                                          prob.GetPlanningGroup(),
                                                                           info[static_cast<size_t>(i - first_step)],
                                                                           prob.GetVarRow(i, 0, n_dof),
                                                                           prob.GetVarRow(i + 1, 0, n_dof))));
@@ -594,7 +596,8 @@ void CollisionTermInfo::addObjectiveTerms(TrajOptProblem& prob)
       for (int i = first_step; i <= last_step; ++i)
       {
         prob.addIneqConstraint(sco::ConstraintPtr(new CollisionConstraint(
-            prob.GetKin(), prob.GetEnv(), info[static_cast<size_t>(i - first_step)], prob.GetVarRow(i, 0, n_dof))));
+            prob.GetPlanningScene(), prob.GetPlanningGroup(),
+            info[static_cast<size_t>(i - first_step)], prob.GetVarRow(i, 0, n_dof))));
         prob.getIneqConstraints().back()->setName((boost::format("%s_%i") % name.c_str() % i).str());
       }
     }
