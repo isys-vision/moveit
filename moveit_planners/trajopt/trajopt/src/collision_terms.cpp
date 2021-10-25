@@ -495,7 +495,11 @@ void CastCollisionEvaluator::CalcCollisions(const DblVec& x, trajopt::ContactRes
       for(size_t k = 0; k < contact_vector.size(); ++k)
       {
         // convert Contact from MoveIt to ContactResult in tesseract:
-        Eigen::Vector3d moveit_cc_nearest_points[2] = contact_vector[k].nearest_points;
+
+        //todo[SimonSchmeisser]: ??? make it compile ...
+        Eigen::Vector3d moveit_cc_nearest_points[2];
+        moveit_cc_nearest_points[0] = contact_vector[k].nearest_points[0];
+        moveit_cc_nearest_points[1] = contact_vector[k].nearest_points[1];
         double moveit_cc_time = 0.5;
         trajopt::ContinouseCollisionType moviet_cc_type = trajopt::ContinouseCollisionType::CCType_Between;
 
