@@ -77,4 +77,4 @@ struct CommandParser
   }
   void read(int argc, char* argv[]);
 };
-}
+}  // namespace util

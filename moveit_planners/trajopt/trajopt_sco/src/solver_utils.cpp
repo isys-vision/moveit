@@ -104,8 +104,7 @@ void tripletsToEigen(const IntVec& rows_i, const IntVec& cols_j, const DblVec& v
   sparse_matrix.setFromTriplets(triplets.begin(), triplets.end());
 }
 
-void eigenToTriplets(const Eigen::SparseMatrix<double>& sparse_matrix, IntVec& rows_i, IntVec& cols_j,
-                     DblVec& values_ij)
+void eigenToTriplets(const Eigen::SparseMatrix<double>& sparse_matrix, IntVec& rows_i, IntVec& cols_j, DblVec& values_ij)
 {
   auto& sm = sparse_matrix;
   rows_i.reserve(rows_i.size() + static_cast<size_t>(sm.nonZeros()));
@@ -121,4 +120,4 @@ void eigenToTriplets(const Eigen::SparseMatrix<double>& sparse_matrix, IntVec& r
     }
   }
 }
-}
+}  // namespace sco

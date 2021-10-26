@@ -7,10 +7,9 @@
 #include <trajopt/basic_types.h>
 
 #include <moveit/robot_model/robot_model.h>
-#include <moveit/planning_scene/planning_scene.h> 
+#include <moveit/planning_scene/planning_scene.h>
 #include <moveit/collision_detection/collision_common.h>
 #include <moveit/collision_detection/world.h>
-
 
 namespace trajopt
 {
@@ -23,22 +22,21 @@ struct CollisionEvaluator
 
   CollisionEvaluator(planning_scene::PlanningSceneConstPtr& planning_scene, std::string planning_group,
                      SafetyMarginDataConstPtr safety_margin_data)
-    :safety_margin_data_(safety_margin_data), planning_group_(planning_group)
+    : safety_margin_data_(safety_margin_data), planning_group_(planning_group)
   {
-    // we need a child of planning scene so I can do the changing robot states and do collsiiong detenction    
+    // we need a child of planning scene so I can do the changing robot states and do collsiiong detenction
     planning_scene_ = planning_scene->diff();
     // remove/add magic objects in planning scene
     std::vector<std::string> objectIds = planning_scene_->getWorld()->getObjectIds();
     for (auto objectId : objectIds)
     {
       collision_detection::World::ObjectConstPtr objPtr = planning_scene_->getWorld()->getObject(objectId);
-      planning_scene_->getWorldNonConst()->removeObject(objectId);  
+      planning_scene_->getWorldNonConst()->removeObject(objectId);
       planning_scene_->getWorldNonConst()->addToObject(objPtr->id_, objPtr->shapes_, objPtr->shape_poses_);
     }
-    
 
     // OR ?
-    //planning_scene_ = planning_scene::PlanningScene::clone(planning_scene);
+    // planning_scene_ = planning_scene::PlanningScene::clone(planning_scene);
   }
   virtual ~CollisionEvaluator() = default;
   virtual void CalcDistExpressions(const DblVec& x, sco::AffExprVector& exprs) = 0;
@@ -46,16 +44,19 @@ struct CollisionEvaluator
   // calculate the collision in planning scene
   virtual void CalcCollisions(const DblVec& x, ContactResultVector& dist_results) = 0;
   void GetCollisionsCached(const DblVec& x, ContactResultVector& dist_results);
-  //virtual void Plot(const tesseract::BasicPlottingPtr plotter, const DblVec& x) = 0;
+  // virtual void Plot(const tesseract::BasicPlottingPtr plotter, const DblVec& x) = 0;
   virtual sco::VarVector GetVars() = 0;
 
-  const SafetyMarginDataConstPtr getSafetyMarginData() const { return safety_margin_data_; }
+  const SafetyMarginDataConstPtr getSafetyMarginData() const
+  {
+    return safety_margin_data_;
+  }
 
   // CaclCollisions() : calculates the collisions in the scene
   // CollisionsToDistance(): converts collisions contacts in the scenes to distances
   // CollisionToDistanceExpressions(): is where acttual linearized math expressions is created
-  // CalcDistExpressions(): 
-  
+  // CalcDistExpressions():
+
   // CalcDists():
   // Value(): calls CalcDists()
 
@@ -70,20 +71,22 @@ struct CollisionEvaluator
   // now what is ContactResult? it has all the informatin related to contact between two bodies
 
 protected:
-  //from MoveIt macros:
+  // from MoveIt macros:
   // typedef std::shared_ptr<const PlanningScene> PlanningSceneConstPtr;
   // the object the pointer is pointing to is const, i.e. the planning scene is constant
   // Also, PlanningScen is noncopyable
-  // setActiveCollisionDetector is a non-const member of PlanningScene which is not accisible from 
-  // a PlanningSceneConstPtr. So I have to deal with the const ptr of planning scene here and 
+  // setActiveCollisionDetector is a non-const member of PlanningScene which is not accisible from
+  // a PlanningSceneConstPtr. So I have to deal with the const ptr of planning scene here and
   // let the user set the collision detector to bullet
 
   planning_scene::PlanningScenePtr planning_scene_;
-  std::string planning_group_; 
+  std::string planning_group_;
   SafetyMarginDataConstPtr safety_margin_data_;
 
 private:
-  CollisionEvaluator() {}
+  CollisionEvaluator()
+  {
+  }
 };
 
 typedef std::shared_ptr<CollisionEvaluator> CollisionEvaluatorPtr;
@@ -92,8 +95,7 @@ struct SingleTimestepCollisionEvaluator : public CollisionEvaluator
 {
 public:
   SingleTimestepCollisionEvaluator(planning_scene::PlanningSceneConstPtr& planning_scene, std::string planning_group,
-                                   SafetyMarginDataConstPtr safety_margin_data,
-                                   const sco::VarVector& vars);
+                                   SafetyMarginDataConstPtr safety_margin_data, const sco::VarVector& vars);
   /**
   @brief linearize all contact distances in terms of robot dofs;
   Do a collision check between robot and environment.
@@ -106,7 +108,11 @@ public:
    */
   void CalcDists(const DblVec& x, DblVec& exprs) override;
   void CalcCollisions(const DblVec& x, ContactResultVector& dist_results) override;
-  sco::VarVector GetVars() override { return m_vars; }
+  sco::VarVector GetVars() override
+  {
+    return m_vars;
+  }
+
 private:
   sco::VarVector m_vars;
 };
@@ -115,37 +121,40 @@ struct CastCollisionEvaluator : public CollisionEvaluator
 {
 public:
   CastCollisionEvaluator(planning_scene::PlanningSceneConstPtr planning_scene, std::string planning_group,
-                         SafetyMarginDataConstPtr safety_margin_data,
-                         const sco::VarVector& vars0,
+                         SafetyMarginDataConstPtr safety_margin_data, const sco::VarVector& vars0,
                          const sco::VarVector& vars1);
   void CalcDistExpressions(const DblVec& x, sco::AffExprVector& exprs) override;
   void CalcDists(const DblVec& x, DblVec& exprs) override;
-  void CalcCollisions(const DblVec& x,  ContactResultVector& dist_results) override;
-  sco::VarVector GetVars() override { return concat(m_vars0, m_vars1); }
-private:
-// for castcollision, swpt volume, we need two states
-  sco::VarVector m_vars0; // contains joint values for state 0
-  sco::VarVector m_vars1; // contains joint values for state 1
+  void CalcCollisions(const DblVec& x, ContactResultVector& dist_results) override;
+  sco::VarVector GetVars() override
+  {
+    return concat(m_vars0, m_vars1);
+  }
 
+private:
+  // for castcollision, swpt volume, we need two states
+  sco::VarVector m_vars0;  // contains joint values for state 0
+  sco::VarVector m_vars1;  // contains joint values for state 1
 };
 
 // sco::Cost does not depend on tesseract. So whatever dependency is there should be here
 class TRAJOPT_API CollisionCost : public sco::Cost
 {
 public:
-  /* constructor for single timestep. 
+  /* constructor for single timestep.
      This constructor initializes m_calc which is type of CollisionEvaluator */
   CollisionCost(planning_scene::PlanningSceneConstPtr& planning_scene, std::string planning_group,
-                SafetyMarginDataConstPtr safety_margin_data,
-                const sco::VarVector& vars);
+                SafetyMarginDataConstPtr safety_margin_data, const sco::VarVector& vars);
   /* constructor for cast cost */
   CollisionCost(planning_scene::PlanningSceneConstPtr& planning_scene, std::string planning_group,
-                SafetyMarginDataConstPtr safety_margin_data,
-                const sco::VarVector& vars0,
-                const sco::VarVector& vars1);
+                SafetyMarginDataConstPtr safety_margin_data, const sco::VarVector& vars0, const sco::VarVector& vars1);
   virtual sco::ConvexObjectivePtr convex(const DblVec& x, sco::Model* model) override;
   virtual double value(const DblVec&) override;
-  sco::VarVector getVars() override { return m_calc->GetVars(); }
+  sco::VarVector getVars() override
+  {
+    return m_calc->GetVars();
+  }
+
 private:
   CollisionEvaluatorPtr m_calc;
 };
@@ -155,18 +164,20 @@ class TRAJOPT_API CollisionConstraint : public sco::IneqConstraint
 public:
   /* constructor for single timestep */
   CollisionConstraint(planning_scene::PlanningSceneConstPtr planning_scene, std::string planning_group,
-                      SafetyMarginDataConstPtr safety_margin_data,
-                      const sco::VarVector& vars);
+                      SafetyMarginDataConstPtr safety_margin_data, const sco::VarVector& vars);
   /* constructor for cast cost */
   CollisionConstraint(planning_scene::PlanningSceneConstPtr planning_scene, std::string planning_group,
-                      SafetyMarginDataConstPtr safety_margin_data,
-                      const sco::VarVector& vars0,
+                      SafetyMarginDataConstPtr safety_margin_data, const sco::VarVector& vars0,
                       const sco::VarVector& vars1);
   virtual sco::ConvexConstraintsPtr convex(const DblVec& x, sco::Model* model) override;
   virtual DblVec value(const DblVec&) override;
   void Plot(const DblVec& x);
-  sco::VarVector getVars() override { return m_calc->GetVars(); }
+  sco::VarVector getVars() override
+  {
+    return m_calc->GetVars();
+  }
+
 private:
   CollisionEvaluatorPtr m_calc;
 };
-}
+}  // namespace trajopt

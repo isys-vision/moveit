@@ -99,7 +99,7 @@ bool TrajOptInterface::solve(const planning_scene::PlanningSceneConstPtr& planni
   current_state->copyJointGroupPositions(joint_model_group, current_joint_values);
   trajopt::printVector("===>>> from interface upper:): ", current_joint_values);
 
-   // Current state is different from star state in general
+  // Current state is different from star state in general
   ROS_INFO(" ======================================= Extract start state infromation");
   trajopt::DblVec start_joint_values = extractStartJointValues(req, group_joint_names);
 
@@ -248,7 +248,8 @@ bool TrajOptInterface::solve(const planning_scene::PlanningSceneConstPtr& planni
 
   // Add a velocity cnt with time to insure that robot dynamics are obeyed
   std::vector<double> vel_lower_lim{ 0, 0, 0, 0, 0, 0, 0 };
-  std::vector<double> vel_upper_lim{ 150 *3.14/180, 150 *3.14/180, 150 *3.14/180, 150 *3.14/180, 180 *3.14/180, 180 *3.14/180, 180 *3.14/180};
+  std::vector<double> vel_upper_lim{ 150 * 3.14 / 180, 150 * 3.14 / 180, 150 * 3.14 / 180, 150 * 3.14 / 180,
+                                     180 * 3.14 / 180, 180 * 3.14 / 180, 180 * 3.14 / 180 };
 
   joint_vel_cnt->targets = std::vector<double>(dof, 0.0);
   joint_vel_cnt->coeffs = std::vector<double>(dof, 50.0);
@@ -325,7 +326,7 @@ bool TrajOptInterface::solve(const planning_scene::PlanningSceneConstPtr& planni
 
   opt.setParameters(params_);
   opt.initialize(trajopt::trajToDblVec(trajopt_problem_->GetInitTraj()));
-  
+
   // Add all callbacks
   for (const sco::Optimizer::Callback& callback : optimizer_callbacks_)
   {

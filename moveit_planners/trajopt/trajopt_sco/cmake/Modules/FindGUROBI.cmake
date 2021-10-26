@@ -3,7 +3,7 @@
 # This modules reads hints about search locations from the following
 # environment variables:
 # GUROBI_HOME
-# 
+#
 # e.g. GUROBI_HOME=/opt/gurobobi810/linux64
 #
 # The module will define:

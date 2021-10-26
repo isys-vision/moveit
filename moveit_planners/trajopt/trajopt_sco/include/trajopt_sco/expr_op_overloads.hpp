@@ -133,4 +133,4 @@ inline AffExpr operator-(const AffExpr& a)
 {
   return exprMult(a, -1);
 }
-}
+}  // namespace sco

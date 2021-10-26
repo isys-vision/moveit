@@ -322,4 +322,4 @@ inline OutVecType getVec1(const DblVec& x, const VarVector& vars)
     out[i] = x[vars[i].var_rep->index];
   return out;
 }
-}
+}  // namespace sco

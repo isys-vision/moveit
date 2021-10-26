@@ -296,4 +296,4 @@ GurobiModel::~GurobiModel()
 {
   ENSURE_SUCCESS(GRBfreemodel(m_model));
 }
-}
+}  // namespace sco

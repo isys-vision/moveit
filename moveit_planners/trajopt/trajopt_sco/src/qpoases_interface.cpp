@@ -259,4 +259,4 @@ VarVector qpOASESModel::getVars() const
 {
   return vars_;
 }
-}
+}  // namespace sco

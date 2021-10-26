@@ -10,7 +10,7 @@ ExternalProject_Add(osqp
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=osqp-install
     # Github tar balls don't code in submodules, so need to
     # download via git
-    GIT_REPOSITORY https://github.com/oxfordcontrol/osqp.git 
+    GIT_REPOSITORY https://github.com/oxfordcontrol/osqp.git
     GIT_TAG v0.5.0 # currently, not compatible with v0.6.0
 )
 

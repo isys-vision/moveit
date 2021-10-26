@@ -390,7 +390,9 @@ struct JointVelTermInfo : public TermInfo
   int last_step = -1;
 
   /** @brief Initialize term with it's supported types */
-  JointVelTermInfo() : TermInfo(TT_COST | TT_CNT | TT_USE_TIME){}
+  JointVelTermInfo() : TermInfo(TT_COST | TT_CNT | TT_USE_TIME)
+  {
+  }
 
   /** @brief Converts term info into cost/constraint and adds it to trajopt problem */
   void addObjectiveTerms(TrajOptProblem& prob) override;
@@ -427,7 +429,7 @@ struct CollisionTermInfo : public TermInfo
     return out;
   }
 
-  CollisionTermInfo() : TermInfo(TT_COST | TT_CNT) 
+  CollisionTermInfo() : TermInfo(TT_COST | TT_CNT)
   {
   }
 };
@@ -435,4 +437,4 @@ struct CollisionTermInfo : public TermInfo
 void generateInitialTrajectory(const ProblemInfo& pci, const std::vector<double>& current_joint_values,
                                trajopt::TrajArray& init_traj);
 
-}  // namespace trajopt_interface
+}  // namespace trajopt

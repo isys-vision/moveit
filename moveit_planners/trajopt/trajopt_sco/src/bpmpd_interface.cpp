@@ -458,7 +458,7 @@ CvxOptStatus BPMPDModel::optimize()
 
 #if 0
   bpmpd(&m, &n, &nz, &qn, &qnz, acolcnt.data(), acolidx.data(), acolnzs.data(), qcolcnt.data(), qcolidx.data(), qcolnzs.data(),
-      rhs.data(), obj.data(), lbound.data(), ubound.data(), 
+      rhs.data(), obj.data(), lbound.data(), ubound.data(),
       primal.data(), dual.data(), status.data(), &BIG, &code, &opt, &memsiz);
 
   // opt += m_objective.affexpr.constant;
@@ -514,4 +514,4 @@ VarVector BPMPDModel::getVars() const
 {
   return m_vars;
 }
-}
+}  // namespace sco

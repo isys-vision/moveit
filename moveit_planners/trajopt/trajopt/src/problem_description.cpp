@@ -552,9 +552,8 @@ void JointVelTermInfo::addObjectiveTerms(TrajOptProblem& prob)
 }
 
 void CollisionTermInfo::addObjectiveTerms(TrajOptProblem& prob)
-{  
-
-  //int n_dof = static_cast<int>(prob.GetKin()->numJoints());
+{
+  // int n_dof = static_cast<int>(prob.GetKin()->numJoints());
   unsigned int n_dof = prob.GetNumDOF();
 
   if (term_type == TT_COST)
@@ -562,12 +561,10 @@ void CollisionTermInfo::addObjectiveTerms(TrajOptProblem& prob)
     if (continuous)
     {
       for (int i = first_step; i <= last_step - gap; ++i)
-      { 
-        prob.addCost(sco::CostPtr(new CollisionCost(prob.GetPlanningScene(),
-                                                    prob.GetPlanningGroup(),
+      {
+        prob.addCost(sco::CostPtr(new CollisionCost(prob.GetPlanningScene(), prob.GetPlanningGroup(),
                                                     info[static_cast<size_t>(i - first_step)],
-                                                    prob.GetVarRow(i, 0, n_dof),
-                                                    prob.GetVarRow(i + gap, 0, n_dof))));
+                                                    prob.GetVarRow(i, 0, n_dof), prob.GetVarRow(i + gap, 0, n_dof))));
         prob.getCosts().back()->setName((boost::format("%s_%i") % name.c_str() % i).str());
       }
     }
@@ -575,9 +572,9 @@ void CollisionTermInfo::addObjectiveTerms(TrajOptProblem& prob)
     {
       for (int i = first_step; i <= last_step; ++i)
       {
-        prob.addCost(sco::CostPtr(new CollisionCost(
-            prob.GetPlanningScene(), prob.GetPlanningGroup(), 
-            info[static_cast<size_t>(i - first_step)], prob.GetVarRow(i, 0, n_dof))));
+        prob.addCost(
+            sco::CostPtr(new CollisionCost(prob.GetPlanningScene(), prob.GetPlanningGroup(),
+                                           info[static_cast<size_t>(i - first_step)], prob.GetVarRow(i, 0, n_dof))));
         prob.getCosts().back()->setName((boost::format("%s_%i") % name.c_str() % i).str());
       }
     }
@@ -589,11 +586,8 @@ void CollisionTermInfo::addObjectiveTerms(TrajOptProblem& prob)
       for (int i = first_step; i < last_step; ++i)
       {
         prob.addIneqConstraint(sco::ConstraintPtr(new CollisionConstraint(
-                                                            prob.GetPlanningScene(),
-                                                            prob.GetPlanningGroup(),
-                                                            info[static_cast<size_t>(i - first_step)],
-                                                            prob.GetVarRow(i, 0, n_dof),
-                                                            prob.GetVarRow(i + 1, 0, n_dof))));
+            prob.GetPlanningScene(), prob.GetPlanningGroup(), info[static_cast<size_t>(i - first_step)],
+            prob.GetVarRow(i, 0, n_dof), prob.GetVarRow(i + 1, 0, n_dof))));
         prob.getIneqConstraints().back()->setName((boost::format("%s_%i") % name.c_str() % i).str());
       }
     }
@@ -601,9 +595,9 @@ void CollisionTermInfo::addObjectiveTerms(TrajOptProblem& prob)
     {
       for (int i = first_step; i <= last_step; ++i)
       {
-        prob.addIneqConstraint(sco::ConstraintPtr(new CollisionConstraint(
-            prob.GetPlanningScene(), prob.GetPlanningGroup(),
-            info[static_cast<size_t>(i - first_step)], prob.GetVarRow(i, 0, n_dof))));
+        prob.addIneqConstraint(sco::ConstraintPtr(
+            new CollisionConstraint(prob.GetPlanningScene(), prob.GetPlanningGroup(),
+                                    info[static_cast<size_t>(i - first_step)], prob.GetVarRow(i, 0, n_dof))));
         prob.getIneqConstraints().back()->setName((boost::format("%s_%i") % name.c_str() % i).str());
       }
     }
@@ -611,7 +605,6 @@ void CollisionTermInfo::addObjectiveTerms(TrajOptProblem& prob)
 }
 
 // ----------------
-
 
 void generateInitialTrajectory(const ProblemInfo& pci, const std::vector<double>& current_joint_values,
                                trajopt::TrajArray& init_traj)
@@ -664,4 +657,4 @@ void generateInitialTrajectory(const ProblemInfo& pci, const std::vector<double>
         Eigen::VectorXd::Constant(init_traj.rows(), init_info.dt);
   }
 }
-}  // namespace trajopt_interface
+}  // namespace trajopt

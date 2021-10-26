@@ -10,4 +10,4 @@ float randf()
 {
   return (float)rand() / (float)RAND_MAX;
 }
-}
+}  // namespace util

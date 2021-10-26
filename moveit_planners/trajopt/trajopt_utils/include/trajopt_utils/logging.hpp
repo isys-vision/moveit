@@ -71,4 +71,4 @@ inline LogLevel GetLogLevel()
     printf(msg, ##__VA_ARGS__);                                                                                        \
     printf(LOG_SUFFIX);                                                                                                \
   }
-}
+}  // namespace util

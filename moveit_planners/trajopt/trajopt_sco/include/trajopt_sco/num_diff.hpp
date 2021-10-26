@@ -76,4 +76,4 @@ void calcGradHess(ScalarOfVectorPtr f, const Eigen::VectorXd& x, double epsilon,
                   Eigen::MatrixXd& hess);
 VectorOfVectorPtr forwardNumGrad(ScalarOfVectorPtr f, double epsilon);
 MatrixOfVectorPtr forwardNumJac(VectorOfVectorPtr f, double epsilon);
-}
+}  // namespace sco

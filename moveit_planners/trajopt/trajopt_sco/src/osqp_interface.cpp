@@ -268,4 +268,4 @@ VarVector OSQPModel::getVars() const
 {
   return vars_;
 }
-}
+}  // namespace sco

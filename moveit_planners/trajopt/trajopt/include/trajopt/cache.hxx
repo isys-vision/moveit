@@ -1,16 +1,19 @@
 #pragma once
-#include <algorithm> 
+#include <algorithm>
 
 template <class KeyT, class ValueT, unsigned bufsize>
 class Cache
 {
 public:
-  //EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+  // EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   KeyT keybuf[bufsize];    // circular buffer
   ValueT valbuf[bufsize];  // circular buffer
   int m_i;
-  Cache() : m_i(0) { memset(keybuf, 666, sizeof(keybuf)); }
+  Cache() : m_i(0)
+  {
+    memset(keybuf, 666, sizeof(keybuf));
+  }
   void put(const KeyT& key, const ValueT& value)
   {
     keybuf[m_i] = key;

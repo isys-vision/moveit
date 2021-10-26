@@ -695,8 +695,7 @@ double JointJerkEqCost::value(const DblVec& xvec)
   Eigen::MatrixXd traj = (getTraj(xvec, vars_));
   // Takes diff b/n the subsequent rows and subtract each row by the targets_ vector
   Eigen::MatrixXd diff =
-      (diffAxis0(diffAxis0(diffAxis0(traj.block(first_step_, 0, last_step_ - first_step_ + 1, traj.cols())))))
-          .rowwise() -
+      (diffAxis0(diffAxis0(diffAxis0(traj.block(first_step_, 0, last_step_ - first_step_ + 1, traj.cols()))))).rowwise() -
       targets_.transpose();
   // Element-wise square it, multiply it by a diagonal matrix of coefficients, and sums output
   return (diff.array().square().matrix() * coeffs_.asDiagonal()).sum();
@@ -810,8 +809,7 @@ DblVec JointJerkEqConstraint::value(const DblVec& xvec)
   Eigen::MatrixXd traj = getTraj(xvec, vars_);
   // Takes diff b/n the subsequent rows and subtract each row by the targets_ vector
   Eigen::MatrixXd diff =
-      (diffAxis0(diffAxis0(diffAxis0(traj.block(first_step_, 0, last_step_ - first_step_ + 1, traj.cols())))))
-          .rowwise() -
+      (diffAxis0(diffAxis0(diffAxis0(traj.block(first_step_, 0, last_step_ - first_step_ + 1, traj.cols()))))).rowwise() -
       targets_.transpose();
   // Squares it, multiplies it by a diagonal matrix of coefficients, and converts to vector
   return util::toDblVec((diff.array().square()).matrix() * coeffs_.asDiagonal());

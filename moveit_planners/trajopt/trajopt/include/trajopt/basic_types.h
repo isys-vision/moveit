@@ -43,15 +43,11 @@ template <typename T>
 using AlignedVector = std::vector<T, Eigen::aligned_allocator<T>>;
 // aligned_allocator provides at least 16 bytes alignment and more
 
-
 template <typename Key, typename Value>
 using AlignedMap = std::map<Key, Value, std::less<Key>, Eigen::aligned_allocator<std::pair<const Key, Value>>>;
 
 template <typename Key, typename Value>
-using AlignedUnorderedMap = std::unordered_map<Key,
-                                               Value,
-                                               std::hash<Key>,
-                                               std::equal_to<Key>,
+using AlignedUnorderedMap = std::unordered_map<Key, Value, std::hash<Key>, std::equal_to<Key>,
                                                Eigen::aligned_allocator<std::pair<const Key, Value>>>;
 
 using VectorIsometry3d = AlignedVector<Eigen::Isometry3d>;
@@ -73,8 +69,7 @@ struct AllowedCollisionMatrix
    * @param obj2 Collision object name
    * @param reason The reason for disabling collison
    */
-  virtual void addAllowedCollision(const std::string& link_name1,
-                                   const std::string& link_name2,
+  virtual void addAllowedCollision(const std::string& link_name1, const std::string& link_name2,
                                    const std::string& reason)
   {
     auto link_pair = makeOrderedLinkPair(link_name1, link_name2);
@@ -108,7 +103,11 @@ struct AllowedCollisionMatrix
    * @brief Clears the list of allowed collisions, so that no collision will be
    *        allowed.
    */
-  void clearAllowedCollisions() { lookup_table_.clear(); }
+  void clearAllowedCollisions()
+  {
+    lookup_table_.clear();
+  }
+
 private:
   typedef std::pair<const std::string, const std::string> LinkNamesPair;
   struct PairHash
@@ -142,7 +141,10 @@ public:
    *         collision entries. The keys of the unordered map are a std::pair
    *         of the link names in the allowed collision pair.
    */
-  const AllowedCollisionEntries& getAllAllowedCollisions() const { return lookup_table_; }
+  const AllowedCollisionEntries& getAllAllowedCollisions() const
+  {
+    return lookup_table_;
+  }
 };
 typedef std::shared_ptr<AllowedCollisionMatrix> AllowedCollisionMatrixPtr;
 typedef std::shared_ptr<const AllowedCollisionMatrix> AllowedCollisionMatrixConstPtr;
@@ -161,9 +163,8 @@ enum CollisionObjectType
   UseShapeType = 0, /**< @brief Infer the type from the type specified in the shapes::Shape class */
 
   // These convert the meshes to custom collision objects
-  ConvexHull =
-      1, /**< @brief Use the mesh in shapes::Shape but make it a convex hulls collision object. (if not convex it will
-            be converted) */
+  ConvexHull = 1,  /**< @brief Use the mesh in shapes::Shape but make it a convex hulls collision object. (if not convex
+                      it will  be converted) */
   MultiSphere = 2, /**< @brief Use the mesh and represent it by multiple spheres collision object */
   SDF = 3          /**< @brief Use the mesh and rpresent it by a signed distance fields collision object */
 };
@@ -212,18 +213,21 @@ struct ContactResult
   double distance;
   int type_id[2];
   std::string link_names[2];
-  Eigen::Vector3d nearest_points[2]; // this is an array of two elements of type Vector3d
+  Eigen::Vector3d nearest_points[2];  // this is an array of two elements of type Vector3d
   Eigen::Vector3d normal;
 
   Eigen::Vector3d cc_nearest_points[2];
-  // this is used when performing continous collision checking. so it should be the nearest point on the 
+  // this is used when performing continous collision checking. so it should be the nearest point on the
   // swept volume of a robot's link and an obstacle (obstacle coul be fixed in space or moving. in the case
   // of moving, we should calculate the swpet volume of the obstacle too, I guess?)
 
   double cc_time;
   ContinouseCollisionType cc_type;
 
-  ContactResult() { clear(); }
+  ContactResult()
+  {
+    clear();
+  }
   /// Clear structure data
   void clear()
   {
@@ -242,10 +246,8 @@ struct ContactResult
   }
 
   // convert collision_detection::Contact from MoveIt to trajopt::ContactResult (from tesseract)
-  ContactResult(collision_detection::Contact moveit_contact,
-                Eigen::Vector3d moveit_cc_nearest_points[2],
-                double moveit_cc_time,
-                ContinouseCollisionType moveit_cc_type)
+  ContactResult(collision_detection::Contact moveit_contact, Eigen::Vector3d moveit_cc_nearest_points[2],
+                double moveit_cc_time, ContinouseCollisionType moveit_cc_type)
   {
     distance = moveit_contact.depth;
     nearest_points[0] = moveit_contact.nearest_points[0];
@@ -256,10 +258,10 @@ struct ContactResult
     type_id[0] = (moveit_contact.body_type_1 == collision_detection::BodyTypes::Type::ROBOT_LINK) ? 0 : 1;
     type_id[1] = (moveit_contact.body_type_2 == collision_detection::BodyTypes::Type::ROBOT_LINK) ? 0 : 1;
     normal = moveit_contact.normal;
-    // to find out the correct information for the following, I probably need to look at 
+    // to find out the correct information for the following, I probably need to look at
     // tesseract_collision/bullet_utils.h
-    cc_nearest_points[0] = moveit_cc_nearest_points[0]; 
-    cc_nearest_points[1] = moveit_cc_nearest_points[1]; 
+    cc_nearest_points[0] = moveit_cc_nearest_points[0];
+    cc_nearest_points[1] = moveit_cc_nearest_points[1];
     cc_time = moveit_cc_time;
     cc_type = moveit_cc_type;
   }
@@ -274,11 +276,8 @@ struct ContactTestData
 {
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-  ContactTestData(const std::vector<std::string>& active,
-                  const double& contact_distance,
-                  const IsContactAllowedFn& fn,
-                  const ContactTestType& type,
-                  ContactResultMap& res)
+  ContactTestData(const std::vector<std::string>& active, const double& contact_distance, const IsContactAllowedFn& fn,
+                  const ContactTestType& type, ContactResultMap& res)
     : active(active), contact_distance(contact_distance), fn(fn), type(type), res(res), done(false)
   {
   }
@@ -323,7 +322,9 @@ struct AttachedBodyInfo
 {
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
-  AttachedBodyInfo() : transform(Eigen::Isometry3d::Identity()) {}
+  AttachedBodyInfo() : transform(Eigen::Isometry3d::Identity())
+  {
+  }
   std::string object_name;              /**< @brief The name of the AttachableObject being used */
   std::string parent_link_name;         /**< @brief The name of the link to attach the body */
   Eigen::Isometry3d transform;          /**< @brief The transform between parent link and object */
@@ -375,5 +376,4 @@ typedef std::shared_ptr<ObjectColorMap> ObjectColorMapPtr;
 typedef std::shared_ptr<const ObjectColorMap> ObjectColorMapConstPtr;
 typedef AlignedUnorderedMap<std::string, AttachedBodyInfo> AttachedBodyInfoMap;
 typedef std::unordered_map<std::string, AttachableObjectConstPtr> AttachableObjectConstPtrMap;
-}
-
+}  // namespace trajopt

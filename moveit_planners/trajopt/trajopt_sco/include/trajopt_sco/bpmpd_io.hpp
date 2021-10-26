@@ -155,4 +155,4 @@ void ser(int fp, bpmpd_output& bo, SerMode mode)
   ser(fp, bo.code, mode);
   ser(fp, bo.opt, mode);
 }
-}
+}  // namespace bpmpd_io

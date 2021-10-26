@@ -58,4 +58,4 @@ inline double vecDot(const DblVec& a, const DblVec& b)
     out += a[i] * b[i];
   return out;
 }
-}
+}  // namespace sco

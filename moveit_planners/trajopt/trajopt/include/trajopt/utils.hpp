@@ -161,9 +161,9 @@ void printVector(std::string str, std::vector<K> v)
   std::stringstream ss;
   ss << str << " ";
   for (std::size_t i = 0; i < v.size(); ++i)
-      ss << v[i] << " ";
+    ss << v[i] << " ";
 
   std::cout << ss.str() << std::endl;
 }
 
-}
+}  // namespace trajopt

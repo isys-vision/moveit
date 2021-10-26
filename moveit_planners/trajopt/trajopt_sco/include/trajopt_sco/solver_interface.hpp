@@ -244,4 +244,4 @@ IntVec cnts2inds(const CntVector& cnts);
  * @param[in,out] val values
  */
 void simplify2(IntVec& inds, DblVec& vals);
-}
+}  // namespace sco

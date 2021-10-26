@@ -146,4 +146,4 @@ protected:
   ModelPtr model_;
   BasicTrustRegionSQPParameters param_;
 };
-}
+}  // namespace sco

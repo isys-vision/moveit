@@ -97,9 +97,10 @@ public:
 
     std::string collision_detector = planning_scene->getActiveCollisionDetectorName();
     ROS_INFO(" ======================================= collision detector is set to %s", collision_detector.c_str());
-    if( collision_detector != "Bullet")
+    if (collision_detector != "Bullet")
     {
-      ROS_WARN("Colllision detector used in trajopt must be Bullet"); // change this to ROS_ERROR afte I figure out how to use bullet instead of FCL
+      ROS_WARN("Colllision detector used in trajopt must be Bullet");  // change this to ROS_ERROR afte I figure out how
+                                                                       // to use bullet instead of FCL
       // TODO: sholuld I just force bullet using diff() and setActiveColisionDetector()
     }
 

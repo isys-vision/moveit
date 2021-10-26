@@ -106,4 +106,4 @@ protected:
 };
 
 std::string AffExprToString(const AffExpr& aff);
-}
+}  // namespace sco

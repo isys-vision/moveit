@@ -45,4 +45,4 @@ struct AffExpr;
 typedef std::shared_ptr<AffExpr> AffExprPtr;
 struct QuadExpr;
 typedef std::shared_ptr<QuadExpr> QuadExprPtr;
-}
+}  // namespace sco

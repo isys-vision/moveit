@@ -14,7 +14,7 @@ std::string Str_impl(const std::vector<T>& x)
   ss << ")";
   return ss.str();
 }
-}
+}  // namespace
 
 namespace util
 {
@@ -30,4 +30,4 @@ std::string Str(const std::vector<int>& x)
 {
   return Str_impl(x);
 }
-}
+}  // namespace util

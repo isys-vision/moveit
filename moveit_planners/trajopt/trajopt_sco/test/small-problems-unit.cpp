@@ -178,8 +178,7 @@ TEST_P(SQP, TP3)
 }
 TEST_P(SQP, TP6)
 {
-  testProblem(ScalarOfVector::construct(&f_TP6), VectorOfVector::construct(&g_TP6), EQ, { 10, 1 }, { 1, 1 },
-              GetParam());
+  testProblem(ScalarOfVector::construct(&f_TP6), VectorOfVector::construct(&g_TP6), EQ, { 10, 1 }, { 1, 1 }, GetParam());
 }
 TEST_P(SQP, TP7)
 {

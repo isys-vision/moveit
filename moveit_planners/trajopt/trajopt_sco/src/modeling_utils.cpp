@@ -13,7 +13,7 @@ namespace sco
 {
 const double DEFAULT_EPSILON = 1e-5;
 
-// convert a VarVector to a DblVec. Var has more properties than a single double 
+// convert a VarVector to a DblVec. Var has more properties than a single double
 Eigen::VectorXd getVec(const DblVec& x, const VarVector& vars)
 {
   Eigen::VectorXd out(vars.size());
@@ -251,4 +251,4 @@ std::string AffExprToString(const AffExpr& aff)
   out.append(" + " + std::to_string(aff.constant));
   return out;
 }
-}
+}  // namespace sco
