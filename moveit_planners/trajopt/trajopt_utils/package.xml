@@ -7,6 +7,7 @@
   <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>moveit_core</build_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

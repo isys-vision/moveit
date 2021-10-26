@@ -1,7 +1,5 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.1.3)
 project(trajopt_utils)
-
-add_compile_options(-std=c++11 -Wall -Wextra)
 
 include(ExternalProject)
 
@@ -14,9 +12,11 @@ ExternalProject_Add(osqp
     GIT_TAG v0.5.0 # currently, not compatible with v0.6.0
 )
 
-find_package(catkin REQUIRED COMPONENTS)
+find_package(catkin REQUIRED COMPONENTS moveit_core)
 find_package(Eigen3 REQUIRED)
 find_package(Boost COMPONENTS system python thread program_options REQUIRED)
+
+moveit_build_options()
 
 set(UTILS_SOURCE_FILES
     src/stl_to_string.cpp

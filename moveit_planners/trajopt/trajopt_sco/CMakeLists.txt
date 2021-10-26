@@ -1,7 +1,5 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.1.3)
 project(trajopt_sco)
-
-add_compile_options(-std=c++11 -Wall -Wextra)
 
 # Download and unpack osqp at configure time
 configure_file(osqp_configure.in
@@ -20,10 +18,12 @@ if(!${osqp_FOUND})
 endif()
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/")
-find_package(catkin REQUIRED COMPONENTS trajopt_utils)
+find_package(catkin REQUIRED COMPONENTS moveit_core trajopt_utils)
 find_package(GUROBI QUIET)
 find_package(qpOASES QUIET)
 find_package(Eigen3 REQUIRED)
+
+moveit_build_options()
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(JSONCPP jsoncpp)
