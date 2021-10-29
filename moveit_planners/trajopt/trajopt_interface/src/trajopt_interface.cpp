@@ -217,6 +217,7 @@ bool TrajOptInterface::solve(const planning_scene::PlanningSceneConstPtr& planni
     for (const moveit_msgs::JointConstraint& joint_goal_constraint : goal_cnt.joint_constraints)
     {
       joint_goal_constraints.push_back(joint_goal_constraint.position);
+      ROS_INFO_STREAM("Goal joint position is: " << joint_goal_constraint.position);
     }
     joint_pos_term->targets = joint_goal_constraints;
     problem_info.cnt_infos.push_back(joint_pos_term);
@@ -318,8 +319,8 @@ bool TrajOptInterface::solve(const planning_scene::PlanningSceneConstPtr& planni
   ROS_INFO(" ======================================= Construct problem");
   trajopt_problem_ = ConstructProblem(problem_info);
 
-  ROS_INFO_STREAM_NAMED("num_cost", trajopt_problem_->getNumCosts());
-  ROS_INFO_STREAM_NAMED("num_constraints", trajopt_problem_->getNumConstraints());
+  ROS_INFO_STREAM_NAMED(name_, "num_cost " << trajopt_problem_->getNumCosts());
+  ROS_INFO_STREAM_NAMED(name_, "num_constraints " << trajopt_problem_->getNumConstraints());
 
   ROS_INFO(" ======================================= TrajOpt Optimization");
   sco::BasicTrustRegionSQP opt(trajopt_problem_);
@@ -341,8 +342,8 @@ bool TrajOptInterface::solve(const planning_scene::PlanningSceneConstPtr& planni
   trajopt::TrajArray opt_solution = trajopt::getTraj(opt.x(), trajopt_problem_->GetVars());
 
   // Assume that the trajectory is now optimized, fill in the output structure:
-  ROS_INFO_STREAM_NAMED("num_rows", opt_solution.rows());
-  ROS_INFO_STREAM_NAMED("num_cols", opt_solution.cols());
+  ROS_INFO_STREAM_NAMED(name_, "num_rows " << opt_solution.rows());
+  ROS_INFO_STREAM_NAMED(name_, "num_cols " << opt_solution.cols());
 
   res.trajectory.resize(1);
   res.trajectory[0].joint_trajectory.joint_names = group_joint_names;
@@ -369,28 +370,28 @@ bool TrajOptInterface::solve(const planning_scene::PlanningSceneConstPtr& planni
   moveit::core::RobotState last_state(*current_state);
   last_state.setJointGroupPositions(req.group_name, res.trajectory[0].joint_trajectory.points.back().positions);
 
-  for (int jn = 0; jn < res.trajectory[0].joint_trajectory.points.back().positions.size(); ++jn)
+  for (size_t jn = 0; jn < res.trajectory[0].joint_trajectory.points.back().positions.size(); ++jn)
   {
-    ROS_INFO_STREAM_NAMED("joint_value",
-                          "response: " << res.trajectory[0].joint_trajectory.points.back().positions[jn]
-                                       << "   goal: " << req.goal_constraints.back().joint_constraints[jn].position);
+    ROS_INFO_STREAM_NAMED(name_, "joint_value "
+                                     << "response: " << res.trajectory[0].joint_trajectory.points.back().positions[jn]
+                                     << "   goal: " << req.goal_constraints.back().joint_constraints[jn].position);
   }
 
   bool constraints_are_ok = true;
   int joint_cnt_index = 0;
   for (const moveit_msgs::JointConstraint& constraint : req.goal_constraints.back().joint_constraints)
   {
-    ROS_INFO("index %i: jc.configure(constraint)=> %d, jc.decide(last_state).satisfied=> %d, tolerance %f",
-             joint_cnt_index, joint_cnt.configure(constraint), joint_cnt.decide(last_state).satisfied,
-             constraint.tolerance_above);
+    ROS_INFO_NAMED(name_, "index %i: jc.configure(constraint)=> %d, jc.decide(last_state).satisfied=> %d, tolerance %f",
+                   joint_cnt_index, joint_cnt.configure(constraint), joint_cnt.decide(last_state).satisfied,
+                   constraint.tolerance_above);
     constraints_are_ok = constraints_are_ok and joint_cnt.configure(constraint);
     constraints_are_ok = constraints_are_ok and joint_cnt.decide(last_state).satisfied;
-    // if (not constraints_are_ok)
-    // {
-    //   ROS_ERROR_STREAM_NAMED("trajopt_planner", "Goal constraints are violated: " << constraint.joint_name);
-    //   res.error_code.val = moveit_msgs::MoveItErrorCodes::GOAL_CONSTRAINTS_VIOLATED;
-    //   return false;
-    // }
+    if (not constraints_are_ok)
+    {
+      ROS_ERROR_STREAM_NAMED(name_, "Goal constraints are violated: " << constraint.joint_name);
+      res.error_code.val = moveit_msgs::MoveItErrorCodes::GOAL_CONSTRAINTS_VIOLATED;
+      return false;
+    }
     joint_cnt_index = joint_cnt_index + 1;
   }
 
@@ -398,11 +399,11 @@ bool TrajOptInterface::solve(const planning_scene::PlanningSceneConstPtr& planni
   res.trajectory_start = req.start_state;
 
   ROS_INFO(" ==================================== Debug Response");
-  ROS_INFO_STREAM_NAMED("group_name", res.group_name);
-  ROS_INFO_STREAM_NAMED("start_traj_name_size", res.trajectory_start.joint_state.name.size());
-  ROS_INFO_STREAM_NAMED("start_traj_position_size", res.trajectory_start.joint_state.position.size());
-  ROS_INFO_STREAM_NAMED("traj_name_size", res.trajectory[0].joint_trajectory.joint_names.size());
-  ROS_INFO_STREAM_NAMED("traj_point_size", res.trajectory[0].joint_trajectory.points.size());
+  ROS_INFO_STREAM_NAMED(name_, "group_name " << res.group_name);
+  ROS_INFO_STREAM_NAMED(name_, "start_traj_name_size " << res.trajectory_start.joint_state.name.size());
+  ROS_INFO_STREAM_NAMED(name_, "start_traj_position_size " << res.trajectory_start.joint_state.position.size());
+  ROS_INFO_STREAM_NAMED(name_, "traj_name_size " << res.trajectory[0].joint_trajectory.joint_names.size());
+  ROS_INFO_STREAM_NAMED(name_, "traj_point_size " << res.trajectory[0].joint_trajectory.points.size());
   return true;
 }
 
