@@ -389,9 +389,8 @@ void RobotStateDisplay::loadRobotModel()
           rdf_loader_->getSRDF() ? rdf_loader_->getSRDF() : std::make_shared<srdf::Model>();
       robot_model_ = std::make_shared<moveit::core::RobotModel>(rdf_loader_->getURDF(), srdf);
       robot_->load(*robot_model_->getURDF());
-      robot_state::RobotState state(robot_model_);
-      state.setToDefaultValues();
-      robot_state_->setState(state);
+      robot_state_ = std::make_shared<robot_interaction::LockedRobotState>(robot_model_);
+      // includes state->setToDefaultValues();
       bool old_state = root_link_name_property_->blockSignals(true);
       root_link_name_property_->setStdString(getRobotModel()->getRootLinkName());
       root_link_name_property_->blockSignals(old_state);
