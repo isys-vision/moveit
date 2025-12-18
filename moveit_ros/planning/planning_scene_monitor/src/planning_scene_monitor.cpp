@@ -393,7 +393,12 @@ void PlanningSceneMonitor::scenePublishingThread()
             if (octomap_monitor_)
               lock = octomap_monitor_->getOcTreePtr()->reading();
             scene_->getPlanningSceneDiffMsg(msg);
-            if (new_scene_update_ == UPDATE_STATE)
+            // setting new_scene_update_ is not atomic wrt the actual changes, do this optimisation only if we do not
+            // miss removing an object
+            auto& aco = msg.robot_state.attached_collision_objects;
+            if (new_scene_update_ == UPDATE_STATE && (std::none_of(aco.begin(), aco.end(), [](auto& o) {
+                  return o.object.operation == moveit_msgs::CollisionObject::REMOVE;
+                })))
             {
               msg.robot_state.attached_collision_objects.clear();
               msg.robot_state.is_diff = true;
